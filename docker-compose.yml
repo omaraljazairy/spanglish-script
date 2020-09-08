@@ -1,0 +1,52 @@
+version: "3.3"
+
+services: 
+  python:
+    build: .
+    volumes:
+      - type: bind
+        source: .
+        target: /app
+    command: tail -f /dev/null
+    links:
+      - 'db'
+    networks:
+      - backend-network
+  db:
+    image: postgres:latest
+    restart: always
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_DB=spanglish_script
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=mydockerpass
+    volumes:
+      - type: volume
+        source: db-data
+        target: /var/lib/postgresql/data
+    networks:
+      - backend-network
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: omar@fedal.nl
+      PGADMIN_DEFAULT_PASSWORD: mydockeradmin
+      PGADMIN_LISTEN_PORT: 80
+    ports:
+      - "8080:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    links:
+      - "db:pgsql-server"
+
+volumes: 
+  db-data: {}
+  pgadmin-data: {}
+networks:
+    backend-network:
+
+# to connect pgadmin with postgresql on localhost, use the Gateway IP instead of the IPAddress of the 
+# postgres db container. 
