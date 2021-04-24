@@ -218,7 +218,8 @@ def quiz(language, quiz):
         query = "select s.id, sentence, sentence_en, category, name from sentence as s join category as c on (s.category = c.id) where s.id not in (select sentence from result where sentence is not null and DATE(created) = CURRENT_DATE and attempts = 1 )"
 
     # final query to append the category if the category was selected, otherwise just append the order by random limit 1
-    query += " and category = %s order by random() limit 1" if categoryId else "  order by random() limit 1"
+    # query += " and category = %s order by random() limit 1" if categoryId else "  order by random() limit 1"
+    query += " and category = %s order by 1 ASC offset 1 limit 10" if categoryId else "order by 1 ASC offset 1 limit 10"
 
     ###########################
     

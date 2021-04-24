@@ -1,5 +1,5 @@
 DB = {
-    'host': '172.21.0.2',
+    'host': '171.27.0.2',
     'username': 'docker',
     'password': 'mydockerpass',
     'database': 'spanglish_script',

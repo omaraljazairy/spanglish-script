@@ -12,6 +12,10 @@ services:
       - 'db'
     networks:
       - backend-network
+    environment:
+      - POSTGRES_DB=spanglish_script
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=mydockerpass
   db:
     image: postgres:latest
     restart: always
@@ -26,8 +30,8 @@ services:
         source: db-data
         target: /var/lib/postgresql/data
     networks:
-      - backend-network
-
+      backend-network:
+        ipv4_address: 171.27.0.2
   pgadmin:
     image: dpage/pgadmin4:latest
     restart: always
@@ -41,12 +45,14 @@ services:
       - pgadmin-data:/var/lib/pgadmin
     links:
       - "db:pgsql-server"
-
 volumes: 
   db-data: {}
   pgadmin-data: {}
 networks:
-    backend-network:
-
+  backend-network:
+    ipam:
+      driver: default
+      config:
+        - subnet: 171.27.0.0/16
 # to connect pgadmin with postgresql on localhost, use the Gateway IP instead of the IPAddress of the 
 # postgres db container. 
